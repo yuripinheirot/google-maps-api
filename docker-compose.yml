@@ -31,6 +31,8 @@ services:
       - 3003:3003
       - 9229:9229
     command: ash -c "yarn install && yarn dev"
+    depends_on:
+      - redis
 
   redis:
     hostname: redis

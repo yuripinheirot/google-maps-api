@@ -1,13 +1,22 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MapsService } from './maps.service';
 import { SearchNearbyQueryRequestDto } from './dto/search-nearby-query.request.dto';
 import { PlacesTypes } from './protocols/places.type';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('maps')
+@UseInterceptors(CacheInterceptor)
 export class MapsController {
   constructor(private readonly mapsService: MapsService) {}
 
   @Get('search/nearby')
+  @CacheTTL(0)
   async searchNearby(@Query() query: SearchNearbyQueryRequestDto) {
     const isValidType = PlacesTypes.includes(query.type);
 

@@ -4,9 +4,22 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { PrettyOptions } from 'pino-pretty';
 import { MapsModule } from './modules/maps/maps.module';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+import type { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
+    CacheModule.register<RedisClientOptions>({
+      ttl: +process.env.TTL_CACHE_IN_MS,
+      max: 3,
+      isGlobal: true,
+      store: redisStore as unknown as CacheStore,
+      socket: {
+        port: 6379,
+        host: 'redis',
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
