@@ -3,6 +3,7 @@ import { StatusModule } from './modules/status/status.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { PrettyOptions } from 'pino-pretty';
+import { MapsModule } from './modules/maps/maps.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PrettyOptions } from 'pino-pretty';
       inject: [ConfigService],
     }),
     StatusModule,
+    MapsModule,
   ],
   controllers: [],
   providers: [],
