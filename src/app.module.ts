@@ -4,15 +4,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { PrettyOptions } from 'pino-pretty';
 import { MapsModule } from './modules/maps/maps.module';
-import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+import {
+  CacheInterceptor,
+  CacheModule,
+  CacheStore,
+} from '@nestjs/cache-manager';
 import type { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
     CacheModule.register<RedisClientOptions>({
-      ttl: +process.env.TTL_CACHE_IN_MS,
-      max: 3,
+      ttl: 0,
+      max: 10,
       isGlobal: true,
       store: redisStore as unknown as CacheStore,
       socket: {
@@ -48,6 +53,11 @@ import * as redisStore from 'cache-manager-redis-store';
     MapsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule {}

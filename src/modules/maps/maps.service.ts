@@ -3,7 +3,10 @@ import { SearchNearbyQueryRequestDto } from './dto/search-nearby-query.request.d
 
 @Injectable()
 export class MapsService {
-  searchNearby(query: SearchNearbyQueryRequestDto) {
-    return query;
+  async searchNearby(query: SearchNearbyQueryRequestDto) {
+    return {
+      ...query,
+      dateTime: new Date(),
+    };
   }
 }
