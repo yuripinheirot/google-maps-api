@@ -9,22 +9,28 @@ import {
   CacheModule,
   CacheStore,
 } from '@nestjs/cache-manager';
-import type { RedisClientOptions } from 'redis';
-import * as redisStore from 'cache-manager-redis-store';
+import { redisStore } from 'cache-manager-redis-store';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MapsLoaderService } from './providers/maps-loader/maps-loader.service';
 
 @Module({
   imports: [
-    CacheModule.register<RedisClientOptions>({
-      ttl: 0,
-      max: 10,
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
       isGlobal: true,
-      store: redisStore as unknown as CacheStore,
-      socket: {
-        port: 6379,
-        host: 'redis',
+      useFactory: async (configService: ConfigService) => {
+        const store = await redisStore({
+          socket: {
+            host: 'redis',
+            port: 6379,
+          },
+          ttl: configService.getOrThrow('TTL_CACHE_IN_MS'),
+        });
+        return {
+          store: store as unknown as CacheStore,
+        };
       },
+      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
