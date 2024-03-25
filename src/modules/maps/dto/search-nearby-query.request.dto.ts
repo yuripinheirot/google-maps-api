@@ -1,4 +1,5 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+import { PlacesTypes } from '../protocols/places.type';
 
 export class SearchNearbyQueryRequestDto {
   @IsNumber()
@@ -10,6 +11,6 @@ export class SearchNearbyQueryRequestDto {
   @IsNumber()
   radius: number;
 
-  @IsString()
+  @IsEnum(PlacesTypes.map((type) => type))
   type: string;
 }
