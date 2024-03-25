@@ -21,6 +21,7 @@
     "test:f": "yarn test:v -c jest-feature-config.js"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.42",
     "@nestjs/cache-manager": "^2.2.1",
     "@nestjs/common": "^10.3.5",
     "@nestjs/config": "^3.2.0",
