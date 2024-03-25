@@ -1,15 +1,18 @@
 import { SearchNearbyQueryRequestDto } from '@/modules/maps/dto/search-nearby-query.request.dto';
 import { MapsController } from '@/modules/maps/maps.controller';
+import { MapsService } from '@/modules/maps/maps.service';
 import { TestingModule } from '@nestjs/testing';
 import { buildTestingModule } from '@specs/support/specs.module';
 
 describe('[UNIT] [maps/maps.controller] - [searchNearby()]', () => {
   let sut: MapsController;
+  let mapsService: MapsService;
 
   beforeAll(async () => {
     const module: TestingModule = await buildTestingModule().compile();
 
     sut = module.get<MapsController>(MapsController);
+    mapsService = module.get<MapsService>(MapsService);
   });
 
   test('should be defined', () => {
@@ -17,17 +20,19 @@ describe('[UNIT] [maps/maps.controller] - [searchNearby()]', () => {
   });
 
   describe('Validations', () => {
-    test.skip('Should validate query params', async () => {
+    test('Should call maps service with query params', async () => {
       const query: SearchNearbyQueryRequestDto = {
         lat: null,
         lng: null,
         radius: null,
-        type: '',
+        type: 'restaurant',
       };
 
-      const requestPromise = sut.searchNearby(query);
+      const mapsServiceSpy = jest.spyOn(mapsService, 'searchNearby');
 
-      await expect(requestPromise).toThrow();
+      await sut.searchNearby(query);
+
+      expect(mapsServiceSpy).toHaveBeenCalledWith(query);
     });
   });
 });
