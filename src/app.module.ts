@@ -12,6 +12,7 @@ import {
 import type { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { MapsLoaderService } from './providers/maps-loader/maps-loader.service';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
     },
+    MapsLoaderService,
   ],
 })
 export class AppModule {}
