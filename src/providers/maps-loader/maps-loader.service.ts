@@ -15,22 +15,19 @@ export class MapsLoaderService extends Client {
   );
 
   async searchNearby(query: SearchNearbyQueryRequestDto) {
-    try {
-      const { data } = await this.placesNearby({
-        params: {
-          location: {
-            lat: query.lat,
-            lng: query.lng,
-          },
-          radius: query.radius,
-          type: query.type,
-          key: this.clientSecret,
+    const { data } = await this.placesNearby({
+      params: {
+        location: {
+          lat: query.lat,
+          lng: query.lng,
         },
-      });
+        radius: query.radius,
+        type: query.type,
+        keyword: query.keyword,
+        key: this.clientSecret,
+      },
+    });
 
-      return data;
-    } catch (error) {
-      throw error;
-    }
+    return data;
   }
 }
